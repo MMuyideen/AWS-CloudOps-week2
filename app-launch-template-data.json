@@ -1,0 +1,10 @@
+{
+    "ImageId": "ami-010bc54829291f055",
+    "InstanceType": "t2.micro",
+    "SecurityGroupIds": [
+        "sg-0e139de87611fe28f"
+    ],
+    "IamInstanceProfile": {
+        "Name": "threetier-ec2role"
+    }
+}

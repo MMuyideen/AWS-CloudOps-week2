@@ -1,0 +1,10 @@
+{
+    "ImageId": "ami-0dd6d5b143dfc0890",
+    "InstanceType": "t2.micro",
+    "SecurityGroupIds": [
+        "sg-0043fffb140833e35"
+    ],
+    "IamInstanceProfile": {
+        "Name": "ec2-role"
+    }
+}

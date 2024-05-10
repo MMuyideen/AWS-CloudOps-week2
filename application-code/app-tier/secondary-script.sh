@@ -35,7 +35,7 @@ echo $APPTier_IMAGE_ID
 
 
 # Create Target group without health, remember to update in console with /health
-TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
+APP_TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
     --name $APP_TARGET_GROUP_NAME \
     --protocol HTTP \
     --port 4000 \
@@ -47,7 +47,7 @@ TARGET_GROUP_ARN=$(aws elbv2 create-target-group \
 echo $TARGET_GROUP_ARN
 
 # Create ALB for app tier
-ALB_ARN=$(aws elbv2 create-load-balancer \
+APP_ALB_ARN=$(aws elbv2 create-load-balancer \
     --name $APP_ALB_NAME \
     --scheme internal \
     --type application \

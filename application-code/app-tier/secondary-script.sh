@@ -145,6 +145,11 @@ aws autoscaling create-auto-scaling-group \
     --target-group-arns $WEB_TARGET_GROUP_ARN \
     --vpc-zone-identifier "$web_SUB_ID1, $web_SUB_ID2"
 
-#Create for WEB tier
+URL=$(aws elbv2 describe-load-balancers \
+ --names $WEB_ALB_NAME \
+ --query LoadBalancers[0].DNSName \
+ --output text )
+
+ echo $URL
 
 

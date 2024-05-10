@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Networking VARS
 REGION="us-east-1"
 VPC_NAME="deen3tiervpc"
 AZ1="us-east-1a"
@@ -31,11 +32,6 @@ DB_MASTER_PASSWORD="MySecurePass123!"
 #EC2 VARS
 EC2_ROLE_NAME="threetier-ec2role"
 S3_BUCKET_NAME="three-tierbucket"
-
-# S3_BUCKET_NAME="deen3tier"
-# aws s3api create-bucket \
-#   --bucket $S3_BUCKET_NAME\
-#   --region $REGION
 
 #Create vpc
 vpc_id=$(aws ec2 create-vpc \
@@ -118,6 +114,9 @@ db_SUB_ID2=$(aws ec2 create-subnet \
  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=dbtier-subnet2}]' \
  --query Subnet.SubnetId \
  --output text )
+
+# Finished Creating Subnets
+
 
 
 #create elastic ip for NAT in Az1 public subnet
@@ -248,7 +247,9 @@ aws ec2 authorize-security-group-ingress \
  --port 80 \
  --source-group $EXT_LB_SG_ID
 
-# create Security Group for Internal load balancer
+# Finished creating Security Groups
+
+# Create Security Group for Internal load balancer
 INT_LB_SG_ID=$(aws ec2 create-security-group \
  --group-name $INT_LB_SG \
  --description "SG for the internal load balancer" \
@@ -263,7 +264,7 @@ aws ec2 authorize-security-group-ingress \
  --port 80 \
  --source-group $WebTierSG_ID
 
-# create Security Group for Private Instances
+# Create Security Group for Private Instances
 PVT_SG_ID=$(aws ec2 create-security-group \
  --group-name $PVT_SG \
  --description "SG for private app tier sg" \
@@ -346,37 +347,7 @@ DB_ENDPOINT=$(aws rds describe-db-clusters \
 
 #PART 3 APP Instances
 
-# Create IAM Role
-aws iam create-role \
-    --role-name $EC2_ROLE_NAME \
-    --assume-role-policy-document '{
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Effect": "Allow",
-                "Principal": {
-                    "Service": "ec2.amazonaws.com"
-                },
-                "Action": "sts:AssumeRole"
-            }
-        ]
-    }'
-
-
-# Attach managed policies
-aws iam attach-role-policy \
-    --role-name $EC2_ROLE_NAME \
-    --policy-arn arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-
-aws iam attach-role-policy \
-    --role-name $EC2_ROLE_NAME \
-    --policy-arn arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
-
-# Create IAM instance profile
-aws iam create-instance-profile \
- --instance-profile-name $EC2_ROLE_NAME
-
-#Create EC2 instance for App tier
+# Create image instance for APP tier
 APPTIER_INSTANCE_ID=$(aws ec2 run-instances \
     --image-id ami-04ff98ccbfa41c9ad \
     --instance-type t2.micro \
@@ -387,6 +358,8 @@ APPTIER_INSTANCE_ID=$(aws ec2 run-instances \
     --query "Reservations[*].Instances[*].[InstanceId]" \
     --output text )
 
+
+# Create image instance for web tier
 WEBTIER_INSTANCE_ID=$(aws ec2 run-instances \
     --image-id ami-04ff98ccbfa41c9ad \
     --instance-type t2.micro \

@@ -87,7 +87,11 @@ aws autoscaling create-auto-scaling-group \
 
 #Create for WEB tier
 
-
+# reupload app files after updating the nginx file with lb dns
+aws s3 cp \
+  application-code/ \
+  s3://$S3_BUCKET_NAME/ \
+  --recursive
 
 # Get instance Id for web tier
 WEBTier_INSTANCE_ID=$(aws ec2 describe-instances \

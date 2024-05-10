@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# make sure to edit the placeholders values
 sudo -su ec2-user
 sudo yum install mysql -y
 mysql -h CHANGE-TO-YOUR-RDS-ENDPOINT -u CHANGE-TO-USER-NAME -p
@@ -32,11 +33,9 @@ pm2 startup
 
 pm2 save
 
-
 # Test App 
 curl http://localhost:4000/health  # expected response is "This is the health check"
 
 curl http://localhost:4000/transaction # expected response {"result":[{"id":1,"amount":400,"description":"groceries"},{"id":2,"amount":100,"description":"class"},{"id":3,"amount":200,"description":"other groceries"},{"id":4,"amount":10,"description":"brownies"}]}
 
-# app success fully setup
-
+# app successfully setup

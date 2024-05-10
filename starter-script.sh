@@ -28,10 +28,24 @@ DB_ENGINE_VERSION="5.7.mysql_aurora.2.07.2"
 DB_INSTANCE_CLASS="db.r6g.2xlarge"
 DB_MASTER_USERNAME="dbadmin"
 DB_MASTER_PASSWORD="MySecurePass123!"
+DB_SBG_NAME="threetier-db-sbg"
 
 #EC2 VARS
 EC2_ROLE_NAME="threetier-ec2role"
 S3_BUCKET_NAME="three-tierbucket"
+
+# Create S3 bucket
+aws s3api create-bucket \
+  --bucket $S3_BUCKET_NAME \
+  --region us-east-1
+
+# upload app files
+aws s3 cp \
+  application-code/ \
+  s3://$S3_BUCKET_NAME/ \
+  --recursive
+
+#
 
 #Create vpc
 vpc_id=$(aws ec2 create-vpc \
@@ -308,7 +322,7 @@ aws ec2 authorize-security-group-ingress \
 # Create DB Subnet GrouP
 aws rds create-db-subnet-group \
     --db-subnet-group-name $DB_SBG_NAME \
-    --db-subnet-group-description "subnet group for the database architecture" \
+    --db-subnet-group-description 'subnet group for the database architecture' \
     --subnet-ids $db_SUB_ID1 $db_SUB_ID2
 
 # Crete RDS Cluster
@@ -371,17 +385,6 @@ WEBTIER_INSTANCE_ID=$(aws ec2 run-instances \
     --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=webTier}]' \
     --query "Reservations[*].Instances[*].[InstanceId]" \
     --output text )
-
-# Create S3 bucket
-aws s3api create-bucket \
-  --bucket $S3_BUCKET_NAME \
-  --region us-east-1
-
-# upload app files
-aws s3 cp \
-  application-code/ \
-  s3://$S3_BUCKET_NAME/ \
-  --recursive
 
 #
 

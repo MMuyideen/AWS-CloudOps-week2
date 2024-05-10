@@ -14,6 +14,12 @@ WEB_ALB_NAME="webtier-internal-lb"
 WEB_LAUNCH_TEMPLATE_NAME="webtier-launch-template"
 WEB_ASG_NAME="threetier-web-ASG"
 
+# upload app files
+aws s3 cp \
+  application-code/ \
+  s3://$S3_BUCKET_NAME/ \
+  --recursive
+
 
 # Get instance Id for app tier
 APPTier_INSTANCE_ID=$(aws ec2 describe-instances \
@@ -80,6 +86,8 @@ aws autoscaling create-auto-scaling-group \
     --vpc-zone-identifier "$app_SUB_ID1, $app_SUB_ID2"
 
 #Create for WEB tier
+
+
 
 # Get instance Id for web tier
 WEBTier_INSTANCE_ID=$(aws ec2 describe-instances \
